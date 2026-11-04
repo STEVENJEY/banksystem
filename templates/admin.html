@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Deck | Galactic Federal Vault</title>
+    <script src="https://tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center pb-6 border-b border-gray-800 mb-8">
+            <h2 class="text-2xl font-bold text-cyan-400">Admin Command Terminal</h2>
+            <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium transition">Logout</a>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="bg-emerald-950/50 border border-emerald-500 text-emerald-200 p-3 rounded mb-6">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8">
+            <h3 class="text-xl font-semibold mb-4 text-gray-200">Deploy New Customer Profile</h3>
+            <form action="/admin/create_user" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-gray-400">Account ID</label>
+                    <input type="text" name="username" required class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-gray-400">Full Name</label>
+                    <input type="text" name="name" required class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-gray-400">Default PIN</label>
+                    <input type="password" name="pin" required class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-gray-400">Initial Balance ($)</label>
+                    <input type="number" name="balance" step="0.01" value="0.00" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div class="md:col-span-4 mt-2">
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-gray-900 font-bold px-6 py-2.5 rounded transition">Initialize User Account</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-700"><h3 class="text-xl font-semibold text-gray-200">Central Database Audit Trail logs</h3></div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-700 text-gray-300 text-sm uppercase">
+                            <th class="p-4">Timestamp</th>
+                            <th class="p-4">User</th>
+                            <th class="p-4">Action Event</th>
+                            <th class="p-4">Security Details</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 text-sm">
+                        {% for log in logs %}
+                        <tr class="hover:bg-gray-750">
+                            <td class="p-4 text-gray-400">{{ log.timestamp }}</td>
+                            <td class="p-4"><code class="text-cyan-400">{{ log.username }}</code></td>
+                            <td class="p-4 font-semibold">{{ log.action }}</td>
+                            <td class="p-4 text-gray-300">{{ log.details }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
